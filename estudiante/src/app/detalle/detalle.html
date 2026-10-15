@@ -1,0 +1,31 @@
+<div class="container py-4" style="max-width: 600px;">
+  <p *ngIf="cargando">Consultando datos...</p>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="card shadow-sm" *ngIf="estudiante && reporte">
+    <div class="card-header bg-dark text-white">
+      <h4 class="mb-0">{{ estudiante.nombre }}</h4>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Notas: {{ estudiante.nota1 }} · {{ estudiante.nota2 }} · {{ estudiante.nota3 }}
+      </li>
+      <li class="list-group-item">Suma: <strong>{{ reporte.suma }}</strong></li>
+      <li class="list-group-item">
+        Promedio: <strong>{{ reporte.promedio | number:'1.2-2' }}</strong>
+      </li>
+      <li class="list-group-item">
+        Estado:
+        <span class="badge" [ngClass]="reporte.estado === 'Aprobado' ? 'bg-success' : 'bg-danger'">
+          {{ reporte.estado }}
+        </span>
+      </li>
+      <li class="list-group-item">
+        Observación:
+        <span class="badge" [ngClass]="colorObservacion">{{ reporte.observacion }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <a class="btn btn-outline-secondary mt-3" routerLink="/estudiantes">← Volver al reporte</a>
+</div>

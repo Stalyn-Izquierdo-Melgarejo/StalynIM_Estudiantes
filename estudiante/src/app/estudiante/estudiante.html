@@ -1,0 +1,32 @@
+<div class="container py-4">
+  <h2 class="mb-1">Reporte de estudiantes</h2>
+  <p *ngIf="cargando">Consultando estudiantes...</p>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="table-responsive" *ngIf="!cargando && !error">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Nota 1</th>
+          <th>Nota 2</th>
+          <th>Nota 3</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of estudiantes">
+          <td>{{ e.nombre }}</td>
+          <td>{{ e.nota1 }}</td>
+          <td>{{ e.nota2 }}</td>
+          <td>{{ e.nota3 }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" [routerLink]="['/detalle', e.id]">
+              Detalle
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
