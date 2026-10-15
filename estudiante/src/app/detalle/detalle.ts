@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Estudiante, EstudianteService, Reporte } from '../services/estudiante.service';
@@ -10,10 +11,17 @@ import { Estudiante, EstudianteService, Reporte } from '../services/estudiante.s
 })
 export class Detalle implements OnInit {
 
-  estudiante?: Estudiante;
-  reporte?: Reporte;
-  cargando = true;
-  error = '';
+  estudiante = signal<Estudiante | undefined>(undefined);
+  reporte = signal<Reporte | undefined>(undefined);
+  cargando = signal(true);
+  error = signal('');
+
+  colorObservacion = computed(() => {
+    const obs = this.reporte()?.observacion;
+    if (obs === 'Excelente') return 'bg-success';
+    if (obs === 'Regular') return 'bg-warning text-dark';
+    return 'bg-danger';
+  });
 
   constructor(
     private route: ActivatedRoute,
@@ -26,24 +34,18 @@ export class Detalle implements OnInit {
     this.servicio.obtenerEstudiante(id).subscribe({
       next: (encontrado) => {
         if (!encontrado) {
-          this.error = 'Estudiante no encontrado.';
+          this.error.set('Estudiante no encontrado.');
         } else {
-          this.estudiante = encontrado;
-          this.reporte = this.servicio.calcular(encontrado);
+          this.estudiante.set(encontrado);
+          this.reporte.set(this.servicio.calcular(encontrado));
         }
-        this.cargando = false;
+        this.cargando.set(false);
       },
       error: (err) => {
         console.error('Error al leer estudiantes.json', err);
-        this.error = 'No se pudo cargar el detalle.';
-        this.cargando = false;
+        this.error.set('No se pudo cargar el detalle.');
+        this.cargando.set(false);
       }
     });
-  }
-
-  get colorObservacion(): string {
-    if (this.reporte?.observacion === 'Excelente') return 'bg-success';
-    if (this.reporte?.observacion === 'Regular') return 'bg-warning text-dark';
-    return 'bg-danger';
   }
 }

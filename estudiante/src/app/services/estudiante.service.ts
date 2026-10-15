@@ -17,6 +17,7 @@ export interface Reporte {
     observacion: string;
 }
 
+
 @Injectable({
     providedIn: 'root'
 })
